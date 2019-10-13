@@ -1,15 +1,15 @@
 #PiCollisions
 import time
 
-
+# a block with x pos, width, mass, velocity
 class Block:
-    def __init__(self, x,  w,  m,  v,  xc):
+    def __init__(self, name, x,  w,  m,  v):
         self.x = x*1.0
-        #self.y = height - w
         self.w = w*1.0
         self.v = v*1.0
         self.m = m*1.0
-        self.xConstraint = xc*1.0
+        self.name = name
+        print("Black '%s' : mass = %d, v = %d" %(self.name, self.m, self.v))
 
     def hitWall(self):
         return self.x <= 0
@@ -29,31 +29,35 @@ class Block:
     def update(self):
         self.x += self.v
         
+    def show(self):
+        print("Show...")
 
-
+#
 class Sketch:
         __piMax = "3141592653589793238"
         count = 0
-        timeSteps = 0
         def __init__(self, digits):
             if (digits > len(self.__piMax)):
                 raise Exception("Digit is too large")
 
             print("Digits : ", digits)
+            
             self.timeSteps = pow(10, digits - 1)
+            print("Time steps :", self.timeSteps)
 
             pistr = self.__piMax[0:digits]
             self.pi = int(pistr)
 
             # setup
-            self.block1 = Block(100, 20, 1, 0, 0)
-            m2 = pow(100, digits - 1)
-            self.block2 = Block(300, 100, m2, -1.0 / self.timeSteps, 20)
+            m1 = 1
+            self.block1 = Block("a", 100, 20, m1, 0)
+            m2 = m1 * pow(100, digits - 1) 
+            self.block2 = Block("A", 300, 100, m2, -1.0 / self.timeSteps)
         
         def draw(self):
             clackSound = False
 
-            for i in range(0, self.timeSteps-1):
+            for i in range(0, self.timeSteps - 1):
                 if (self.block1.collide(self.block2)):
                     v1 = self.block1.bounce(self.block2)
                     v2 = self.block2.bounce(self.block1)
@@ -72,9 +76,8 @@ class Sketch:
             if (clackSound):
                 print("Clack...")
             
-
-            #block1.show();
-            #block2.show();
+            #self.block1.show();
+            #self.block2.show();
 
             print(self.count)
 
